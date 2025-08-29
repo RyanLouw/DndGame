@@ -1,5 +1,6 @@
 @page "/login"
 @inject FirebaseAuthService Auth
+@inject NavigationManager Navigation
 
 <h3>Login</h3>
 
@@ -7,18 +8,26 @@
 <input @bind="password" type="password" placeholder="Password" />
 <button @onclick="HandleLogin">Login</button>
 
-@if (!string.IsNullOrEmpty(userId))
-{
-    <p>Logged in as @userId</p>
-}
-
 @code {
     private string email = string.Empty;
     private string password = string.Empty;
     private string? userId;
 
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await Auth.GetCurrentUser();
+        if (!string.IsNullOrEmpty(userId))
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
     private async Task HandleLogin()
     {
         userId = await Auth.SignInWithEmailPassword(email, password);
+        if (!string.IsNullOrEmpty(userId))
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 }

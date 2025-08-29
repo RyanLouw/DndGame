@@ -1,4 +1,22 @@
 @page "/"
+@inject FirebaseAuthService Auth
 
 <h1>Welcome to DndGame</h1>
-<p><NavLink href="login">Login</NavLink></p>
+
+@if (!string.IsNullOrEmpty(userId))
+{
+    <p>Logged in as @userId</p>
+}
+else
+{
+    <p><NavLink href="login">Login</NavLink></p>
+}
+
+@code {
+    private string? userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await Auth.GetCurrentUser();
+    }
+}
