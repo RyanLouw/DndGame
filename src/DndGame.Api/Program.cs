@@ -1,5 +1,6 @@
 using DndGame.Data;               // namespace from scaffolded project
 using DndGame.Data.Entities;
+using DndGame.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -31,6 +32,11 @@ builder.Services.AddCors(opt =>
     );
 });
 
+// Controllers and services
+builder.Services.AddControllers();
+builder.Services.AddScoped<IPingDataAccess, PingDataAccess>();
+builder.Services.AddScoped<PingManager>();
+
 var app = builder.Build();
 app.UseCors();
 
@@ -46,10 +52,8 @@ if (app.Environment.IsDevelopment())
 // Health
 app.MapGet("/", () => "DND Game API OK");
 
-// Simple endpoint to verify the API is reachable
-app.MapGet("/api/ping", () => Results.Ok(new { message = "pong" }))
-    .WithName("Ping")
-    .WithOpenApi();
+// Controllers
+app.MapControllers();
 
 // --- Minimal test endpoints ---
 app.MapGet("/api/users", async (DndGameContext db) =>
