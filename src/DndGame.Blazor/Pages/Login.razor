@@ -5,7 +5,7 @@
 
 <input @bind="email" placeholder="Email" />
 <input @bind="password" type="password" placeholder="Password" />
-<button @onclick="Login">Login</button>
+<button @onclick="HandleLogin">Login</button>
 
 @if (!string.IsNullOrEmpty(userId))
 {
@@ -17,7 +17,7 @@
     private string password = string.Empty;
     private string? userId;
 
-    private async Task Login()
+    private async Task HandleLogin()
     {
         userId = await Auth.SignInWithEmailPassword(email, password);
     }
