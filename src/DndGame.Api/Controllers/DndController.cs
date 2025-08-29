@@ -19,7 +19,8 @@ public class DndController : ControllerBase
     [HttpGet("user")]
     public async Task<IActionResult> GetUser(string firebaseId, string email)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == firebaseId);
+        var user = await _db.Users.Include(u => u.Character)
+            .FirstOrDefaultAsync(u => u.UserId == firebaseId);
         if (user == null)
         {
             user = new User
@@ -31,8 +32,7 @@ public class DndController : ControllerBase
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
         }
-        var hasCharacter = await _db.Characters.AnyAsync(c => c.UserId == user.UserId);
-        var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || !hasCharacter;
+        var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || user.Character == null;
         return Ok(new { user, needsCharacterCreation });
     }
 }

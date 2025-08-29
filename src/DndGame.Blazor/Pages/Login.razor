@@ -1,6 +1,8 @@
 @page "/login"
 @inject FirebaseAuthService Auth
 @inject NavigationManager Navigation
+@inject HttpClient Http
+@using System.Net.Http.Json
 
 <h3>Login</h3>
 
@@ -18,8 +20,21 @@
         userId = await Auth.GetCurrentUser();
         if (!string.IsNullOrEmpty(userId))
         {
-            Navigation.NavigateTo("/");
+            var result = await Http.GetFromJsonAsync<UserResponse>($"api/dnd/user?firebaseId={userId}&email={email}");
+            if (result?.needsCharacterCreation == true)
+            {
+                Navigation.NavigateTo("/character-creation");
+            }
+            else
+            {
+                Navigation.NavigateTo("/");
+            }
         }
+    }
+
+    private class UserResponse
+    {
+        public bool needsCharacterCreation { get; set; }
     }
 
     private async Task HandleLogin()
@@ -27,7 +42,15 @@
         userId = await Auth.SignInWithEmailPassword(email, password);
         if (!string.IsNullOrEmpty(userId))
         {
-            Navigation.NavigateTo("/");
+            var result = await Http.GetFromJsonAsync<UserResponse>($"api/dnd/user?firebaseId={userId}&email={email}");
+            if (result?.needsCharacterCreation == true)
+            {
+                Navigation.NavigateTo("/character-creation");
+            }
+            else
+            {
+                Navigation.NavigateTo("/");
+            }
         }
     }
 }
