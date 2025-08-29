@@ -4,3 +4,25 @@ GET {{DndGame.Api_HostAddress}}/api/ping
 Accept: application/json
 
 ###
+
+GET {{DndGame.Api_HostAddress}}/api/users
+Accept: application/json
+
+###
+
+GET {{DndGame.Api_HostAddress}}/api/characters
+Accept: application/json
+
+###
+
+POST {{DndGame.Api_HostAddress}}/api/characters
+Content-Type: application/json
+
+{
+  "userId": "test-uid",
+  "name": "Aerin",
+  "race": "Elf",
+  "alignment": "CG"
+}
+
+###

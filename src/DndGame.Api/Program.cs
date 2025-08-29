@@ -55,13 +55,6 @@ app.MapGet("/", () => "DND Game API OK");
 // Controllers
 app.MapControllers();
 
-// --- Minimal test endpoints ---
-app.MapGet("/api/users", async (DndGameContext db) =>
-    await db.Users.Take(50).ToListAsync());
-
-app.MapGet("/api/characters", async (DndGameContext db) =>
-    await db.Characters.Take(50).ToListAsync());
-
 // Seed (dev only)
 app.MapPost("/dev/seed", async (DndGameContext db) =>
 {
@@ -78,23 +71,4 @@ app.MapPost("/dev/seed", async (DndGameContext db) =>
     return Results.Ok(new { ok = true });
 });
 
-// Create character (basic)
-app.MapPost("/api/characters", async (DndGameContext db, CharacterCreateDto dto) =>
-{
-    var ch = new Character
-    {
-        UserId = dto.UserId,  // later: derive from Firebase token
-        Name = dto.Name,
-        Race = dto.Race,
-        Alignment = dto.Alignment,
-        IsActive = true,
-        CreatedAt = DateTime.UtcNow
-    };
-    db.Characters.Add(ch);
-    await db.SaveChangesAsync();
-    return Results.Created($"/api/characters/{ch.CharacterId}", ch);
-});
-
 app.Run();
-
-public record CharacterCreateDto(string UserId, string Name, string? Race, string? Alignment);
