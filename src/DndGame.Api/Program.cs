@@ -34,10 +34,11 @@ builder.Services.AddCors(opt =>
 var app = builder.Build();
 app.UseCors();
 
-// Swagger UI in development
+// Always expose the OpenAPI spec; only enable UI in development
+app.UseSwagger();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI(options =>
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "DND Game API v1"));
 }
