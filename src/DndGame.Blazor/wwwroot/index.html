@@ -8,15 +8,8 @@
 <body>
     <div id="app">Loading...</div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="firebaseAuth.js"></script>
-    <script>
-        firebaseAuth.init({
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN"
-        });
-    </script>
+    <script type="module" src="firebase-init.js"></script>
+    <script type="module" src="firebaseAuth.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

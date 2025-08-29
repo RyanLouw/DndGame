@@ -11,4 +11,7 @@ public class FirebaseAuthService
 
     public ValueTask<string> SignInWithEmailPassword(string email, string password)
         => _js.InvokeAsync<string>("firebaseAuth.signIn", email, password);
+
+    public ValueTask<string> GetCurrentUser()
+        => _js.InvokeAsync<string>("firebaseAuth.getCurrentUser");
 }
