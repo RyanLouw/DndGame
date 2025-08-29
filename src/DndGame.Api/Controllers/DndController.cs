@@ -31,6 +31,8 @@ public class DndController : ControllerBase
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
         }
-        return Ok(user);
+        var hasCharacter = await _db.Characters.AnyAsync(c => c.UserId == user.UserId);
+        var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || !hasCharacter;
+        return Ok(new { user, needsCharacterCreation });
     }
 }
