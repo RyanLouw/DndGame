@@ -55,20 +55,6 @@ app.MapGet("/", () => "DND Game API OK");
 // Controllers
 app.MapControllers();
 
-// Seed (dev only)
-app.MapPost("/dev/seed", async (DndGameContext db) =>
-{
-    if (await db.Users.FindAsync("test-uid") is null)
-    {
-        db.Users.Add(new User { UserId = "test-uid", Email = "test@example.com", CreatedAt = DateTime.UtcNow });
-        await db.SaveChangesAsync();
-    }
-    if (!await db.Characters.AnyAsync(c => c.UserId == "test-uid"))
-    {
-        db.Characters.Add(new Character { UserId = "test-uid", Name = "Aerin", Race = "Elf", Alignment = "CG", IsActive = true, CreatedAt = DateTime.UtcNow });
-        await db.SaveChangesAsync();
-    }
-    return Results.Ok(new { ok = true });
-});
+
 
 app.Run();
