@@ -1,0 +1,24 @@
+@page "/login"
+@inject FirebaseAuthService Auth
+
+<h3>Login</h3>
+
+<input @bind="email" placeholder="Email" />
+<input @bind="password" type="password" placeholder="Password" />
+<button @onclick="Login">Login</button>
+
+@if (!string.IsNullOrEmpty(userId))
+{
+    <p>Logged in as @userId</p>
+}
+
+@code {
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string? userId;
+
+    private async Task Login()
+    {
+        userId = await Auth.SignInWithEmailPassword(email, password);
+    }
+}
