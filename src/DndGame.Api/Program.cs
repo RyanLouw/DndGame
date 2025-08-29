@@ -1,5 +1,6 @@
 using DndGame.Data;               // namespace from scaffolded project
 using DndGame.Data.Entities;
+using DndGame.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -31,6 +32,11 @@ builder.Services.AddCors(opt =>
     );
 });
 
+// Controllers and services
+builder.Services.AddControllers();
+builder.Services.AddScoped<IPingDataAccess, PingDataAccess>();
+builder.Services.AddScoped<PingManager>();
+
 var app = builder.Build();
 app.UseCors();
 
@@ -46,46 +52,9 @@ if (app.Environment.IsDevelopment())
 // Health
 app.MapGet("/", () => "DND Game API OK");
 
-// --- Minimal test endpoints ---
-app.MapGet("/api/users", async (DndGameContext db) =>
-    await db.Users.Take(50).ToListAsync());
+// Controllers
+app.MapControllers();
 
-app.MapGet("/api/characters", async (DndGameContext db) =>
-    await db.Characters.Take(50).ToListAsync());
 
-// Seed (dev only)
-app.MapPost("/dev/seed", async (DndGameContext db) =>
-{
-    if (await db.Users.FindAsync("test-uid") is null)
-    {
-        db.Users.Add(new User { UserId = "test-uid", Email = "test@example.com", CreatedAt = DateTime.UtcNow });
-        await db.SaveChangesAsync();
-    }
-    if (!await db.Characters.AnyAsync(c => c.UserId == "test-uid"))
-    {
-        db.Characters.Add(new Character { UserId = "test-uid", Name = "Aerin", Race = "Elf", Alignment = "CG", IsActive = true, CreatedAt = DateTime.UtcNow });
-        await db.SaveChangesAsync();
-    }
-    return Results.Ok(new { ok = true });
-});
-
-// Create character (basic)
-app.MapPost("/api/characters", async (DndGameContext db, CharacterCreateDto dto) =>
-{
-    var ch = new Character
-    {
-        UserId = dto.UserId,  // later: derive from Firebase token
-        Name = dto.Name,
-        Race = dto.Race,
-        Alignment = dto.Alignment,
-        IsActive = true,
-        CreatedAt = DateTime.UtcNow
-    };
-    db.Characters.Add(ch);
-    await db.SaveChangesAsync();
-    return Results.Created($"/api/characters/{ch.CharacterId}", ch);
-});
 
 app.Run();
-
-public record CharacterCreateDto(string UserId, string Name, string? Race, string? Alignment);
