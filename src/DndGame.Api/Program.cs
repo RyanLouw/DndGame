@@ -46,6 +46,11 @@ if (app.Environment.IsDevelopment())
 // Health
 app.MapGet("/", () => "DND Game API OK");
 
+// Simple endpoint to verify the API is reachable
+app.MapGet("/api/ping", () => Results.Ok(new { message = "pong" }))
+    .WithName("Ping")
+    .WithOpenApi();
+
 // --- Minimal test endpoints ---
 app.MapGet("/api/users", async (DndGameContext db) =>
     await db.Users.Take(50).ToListAsync());
