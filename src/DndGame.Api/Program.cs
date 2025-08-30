@@ -36,6 +36,8 @@ builder.Services.AddCors(opt =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<IPingDataAccess, PingDataAccess>();
 builder.Services.AddScoped<PingManager>();
+builder.Services.AddScoped<IUserDataAccess, UserDataAccess>();
+builder.Services.AddScoped<UserDataManager>();
 
 var app = builder.Build();
 app.UseCors();

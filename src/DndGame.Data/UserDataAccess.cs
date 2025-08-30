@@ -1,25 +1,25 @@
 ﻿
-using DndGame.Data;
 using DndGame.Data.Entities;
+using DndGame.Domain.Interface;
 using Microsoft.EntityFrameworkCore;
-namespace DndGame.Domain;
 
-public class UserDataAccess
+namespace DndGame.Data;
+
+public class UserDataAccess : IUserDataAccess
 {
-
     private readonly DndGameContext _db;
 
-  
-    public UserDataAccess( DndGameContext db)
+    public UserDataAccess(DndGameContext db)
     {
         _db = db;
     }
 
-
-    public async Task<User> GetUserAsync(string firebaseId, string email)
+    public async Task<string> GetUserAsync(string firebaseId, string email)
     {
-        var user = await _db.Users.Include(u => u.Character)
+        var user = await _db.Users
+            .Include(u => u.Character)
             .FirstOrDefaultAsync(u => u.UserId == firebaseId);
+
         if (user == null)
         {
             user = new User
@@ -28,11 +28,11 @@ public class UserDataAccess
                 Email = email,
                 CreatedAt = DateTime.UtcNow
             };
+
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
         }
-        var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || user.Character == null;
-        return user;
-    }
 
+        return user.UserId;
+    }
 }
