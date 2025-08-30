@@ -1,11 +1,11 @@
 ﻿
 using DndGame.Data.Entities;
-using DndGame.Domain.Interface;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace DndGame.Data;
 
-public class UserDataAccess : IUserDataAccess
+public class UserDataAccess 
 {
     private readonly DndGameContext _db;
 
@@ -14,7 +14,13 @@ public class UserDataAccess : IUserDataAccess
         _db = db;
     }
 
-    public async Task<string> GetUserAsync(string firebaseId, string email)
+    public class UserResult
+    {
+        public string UserId { get; set; }
+        public bool HasCharacter { get; set; }
+    }
+
+    public async Task<User> GetUserAsync(string firebaseId, string email)
     {
         var user = await _db.Users
             .Include(u => u.Character)
@@ -33,6 +39,8 @@ public class UserDataAccess : IUserDataAccess
             await _db.SaveChangesAsync();
         }
 
-        return user.UserId;
+        return user;
     }
+
+
 }
