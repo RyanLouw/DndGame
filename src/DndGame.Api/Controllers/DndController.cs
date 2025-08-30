@@ -11,9 +11,9 @@ namespace DndGame.Api.Controllers;
 public class DndController : ControllerBase
 {
 
-    private readonly UserDataManager _users;
+    private readonly UserDataAccess _users;
 
-    public DndController(UserDataManager users)
+    public DndController(UserDataAccess users)
     {
         _users = users;
     }
@@ -28,6 +28,6 @@ public class DndController : ControllerBase
         if (result is null)
             return NotFound("User not found.");
 
-        return Ok(result); // if result is a string userId, this returns it; if it's a DTO, it returns the JSON object.
+        return Ok(result); 
     }
 }

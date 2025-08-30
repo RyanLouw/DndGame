@@ -2,5 +2,5 @@ namespace DndGame.Domain.Interface;
 
 public interface IUserDataAccess
 {
-    Task<string> GetUserAsync(string firebaseId, string email);
+    Task<(string UserId, bool HasCharacter)> GetUserAsync(string firebaseId, string email);
 }

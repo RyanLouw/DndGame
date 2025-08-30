@@ -1,6 +1,5 @@
 using DndGame.Data;
-using DndGame.Domain;
-using DndGame.Domain.Interface;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -34,8 +33,9 @@ builder.Services.AddCors(opt =>
 
 // Controllers and services
 builder.Services.AddControllers();
-builder.Services.AddScoped<IPingDataAccess, PingDataAccess>();
-builder.Services.AddScoped<PingManager>();
+
+
+builder.Services.AddScoped<UserDataAccess>();
 
 var app = builder.Build();
 app.UseCors();
