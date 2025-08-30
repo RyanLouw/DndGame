@@ -1,7 +1,8 @@
-﻿using System.Net.Http;
+﻿using DndGame.Data.Entities; 
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using DndGame.Data.Entities; 
 
 namespace DndGame.Blazor
 {
@@ -29,5 +30,9 @@ namespace DndGame.Blazor
     {
         public User? User { get; set; }
         public bool NeedsCharacterCreation { get; set; }
+    }
+    public class ApiSettings
+    {
+        public Dictionary<string, string> Apis { get; set; } = new();
     }
 }
