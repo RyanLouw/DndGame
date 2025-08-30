@@ -1,3 +1,5 @@
+using DndGame.Domain.Interface;
+
 namespace DndGame.Domain;
 
 public class PingManager

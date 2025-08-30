@@ -1,5 +1,5 @@
-using DndGame.Data;
-using DndGame.Data.Entities;
+
+using DndGame.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,30 +9,24 @@ namespace DndGame.Api.Controllers;
 [Route("api/dnd")]
 public class DndController : ControllerBase
 {
-    private readonly DndGameContext _db;
 
-    public DndController(DndGameContext db)
+    private readonly UserDataManager _users;
+
+    public DndController(UserDataManager users)
     {
-        _db = db;
+        _users = users;
     }
-
     [HttpGet("user")]
-    public async Task<IActionResult> GetUser(string firebaseId, string email)
+    public async Task<IActionResult> GetUser([FromQuery] string? firebaseId, [FromQuery] string? email)
     {
-        var user = await _db.Users.Include(u => u.Character)
-            .FirstOrDefaultAsync(u => u.UserId == firebaseId);
-        if (user == null)
-        {
-            user = new User
-            {
-                UserId = firebaseId,
-                Email = email,
-                CreatedAt = DateTime.UtcNow
-            };
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-        }
-        var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || user.Character == null;
-        return Ok(new { user, needsCharacterCreation });
+        if (string.IsNullOrWhiteSpace(firebaseId) && string.IsNullOrWhiteSpace(email))
+            return BadRequest("Provide either firebaseId or email.");
+
+        var result = await _users.GetUserAsync(firebaseId, email);
+
+        if (result is null)
+            return NotFound("User not found.");
+
+        return Ok(result); // if result is a string userId, this returns it; if it's a DTO, it returns the JSON object.
     }
 }

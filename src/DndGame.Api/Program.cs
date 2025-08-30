@@ -1,16 +1,16 @@
-using DndGame.Data;               // namespace from scaffolded project
-using DndGame.Data.Entities;
+using DndGame.Data;
 using DndGame.Domain;
+using DndGame.Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
+
 builder.Services.AddDbContext<DndGameContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// Swagger
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -21,14 +21,14 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// CORS (allow local dev UI later)
+
 builder.Services.AddCors(opt =>
 {
     opt.AddDefaultPolicy(p => p
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials()
-        .SetIsOriginAllowed(_ => true) // dev only
+        .SetIsOriginAllowed(_ => true)
     );
 });
 
@@ -39,8 +39,6 @@ builder.Services.AddScoped<PingManager>();
 
 var app = builder.Build();
 app.UseCors();
-
-// Always expose the OpenAPI spec; only enable UI in development
 app.UseSwagger();
 
 if (app.Environment.IsDevelopment())
@@ -49,10 +47,8 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "DND Game API v1"));
 }
 
-// Health
-app.MapGet("/", () => "DND Game API OK");
 
-// Controllers
+
 app.MapControllers();
 
 

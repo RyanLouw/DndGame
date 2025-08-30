@@ -1,4 +1,4 @@
-using DndGame.Domain;
+using DndGame.Domain.Interface;
 
 namespace DndGame.Data;
 
