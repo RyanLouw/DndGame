@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DndGame.Data\DndGame.Data.csproj" />
-    <ProjectReference Include="..\DndGame.Domain\DndGame.Domain.csproj" />
   </ItemGroup>
 
 </Project>
