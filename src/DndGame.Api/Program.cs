@@ -1,5 +1,4 @@
 using DndGame.Data;               // namespace from scaffolded project
-using DndGame.Data.Entities;
 using DndGame.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
