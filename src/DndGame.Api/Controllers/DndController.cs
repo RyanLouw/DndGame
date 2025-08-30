@@ -35,4 +35,39 @@ public class DndController : ControllerBase
         var needsCharacterCreation = string.IsNullOrWhiteSpace(user.DisplayName) || user.Character == null;
         return Ok(new { user, needsCharacterCreation });
     }
+
+    public class CreateCharacterRequest
+    {
+        public string UserId { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string? Race { get; set; }
+        public string? Alignment { get; set; }
+        public string? Backstory { get; set; }
+    }
+
+    [HttpPost("character")]
+    public async Task<IActionResult> CreateCharacter([FromBody] CreateCharacterRequest request)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == request.UserId);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var character = new Character
+        {
+            UserId = user.UserId,
+            IsActive = true,
+            Name = request.Name,
+            Race = request.Race,
+            Alignment = request.Alignment,
+            Backstory = request.Backstory,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _db.Characters.Add(character);
+        await _db.SaveChangesAsync();
+
+        return Ok(character);
+    }
 }

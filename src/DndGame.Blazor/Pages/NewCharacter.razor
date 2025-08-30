@@ -1,0 +1,55 @@
+@page "/new-character"
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject FirebaseAuthService Auth
+
+<h3>New Character</h3>
+
+<EditForm OnValidSubmit="HandleSubmit">
+    <div>
+        <InputText @bind-Value="name" placeholder="Name" />
+    </div>
+    <div>
+        <InputText @bind-Value="race" placeholder="Race" />
+    </div>
+    <div>
+        <InputText @bind-Value="alignment" placeholder="Alignment" />
+    </div>
+    <div>
+        <InputTextArea @bind-Value="backstory" placeholder="Backstory" />
+    </div>
+    <button type="submit">Create</button>
+</EditForm>
+
+@code {
+    private string name = string.Empty;
+    private string race = string.Empty;
+    private string alignment = string.Empty;
+    private string backstory = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        var userId = await Auth.GetCurrentUser();
+        if (string.IsNullOrEmpty(userId))
+        {
+            Navigation.NavigateTo("login");
+            return;
+        }
+
+        var request = new
+        {
+            UserId = userId,
+            Name = name,
+            Race = race,
+            Alignment = alignment,
+            Backstory = backstory
+        };
+
+        var response = await Http.PostAsJsonAsync("api/dnd/character", request);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+}
