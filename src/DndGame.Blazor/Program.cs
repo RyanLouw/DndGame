@@ -13,7 +13,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Option B: bind ApiSettings (from wwwroot/appsettings.json in WASM)
 var apiSettings = new ApiSettings();
-builder.Configuration.GetSection("ApiSettings").Bind(apiSettings);
+builder.Configuration.GetSection("LocalApi").Bind(apiSettings);
 builder.Services.AddSingleton(apiSettings);
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

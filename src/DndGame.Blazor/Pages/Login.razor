@@ -1,6 +1,7 @@
 @page "/login"
 @inject FirebaseAuthService Auth
 @inject NavigationManager Navigation
+@inject ApiServices ApiServices
 
 <h3>Login</h3>
 
@@ -18,6 +19,7 @@
         userId = await Auth.GetCurrentUser();
         if (!string.IsNullOrEmpty(userId))
         {
+            var userExists = await ApiServices.GetUserAsync(userId, "");
             Navigation.NavigateTo("/");
         }
     }
@@ -27,6 +29,7 @@
         userId = await Auth.SignInWithEmailPassword(email, password);
         if (!string.IsNullOrEmpty(userId))
         {
+            var userExists = await ApiServices.GetUserAsync(userId, "");
             Navigation.NavigateTo("/");
         }
     }
