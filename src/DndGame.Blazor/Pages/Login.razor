@@ -12,39 +12,29 @@
 @code {
     private string email = string.Empty;
     private string password = string.Empty;
-    private string? userId;
+    private FirebaseUser? currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        userId = await Auth.GetCurrentUser();
-        if (!string.IsNullOrEmpty(userId))
+        currentUser = await Auth.GetCurrentUser();
+        if (currentUser is not null)
         {
-            var user = await Api.GetUserAsync(userId, email);
-            if (user?.Character == null)
-            {
-                Navigation.NavigateTo("/character-creation");
-            }
-            else
-            {
-                Navigation.NavigateTo("/");
-            }
+            await CheckCharacterAndRedirect(currentUser);
         }
     }
 
     private async Task HandleLogin()
     {
-        userId = await Auth.SignInWithEmailPassword(email, password);
-        if (!string.IsNullOrEmpty(userId))
+        currentUser = await Auth.SignInWithEmailPassword(email, password);
+        if (currentUser is not null)
         {
-            var user = await Api.GetUserAsync(userId, email);
-            if (user?.Character == null)
-            {
-                Navigation.NavigateTo("/character-creation");
-            }
-            else
-            {
-                Navigation.NavigateTo("/");
-            }
+            await CheckCharacterAndRedirect(currentUser);
         }
+    }
+
+    private async Task CheckCharacterAndRedirect(FirebaseUser user)
+    {
+        var dbUser = await Api.GetUserAsync(user.Uid, user.Email);
+        Navigation.NavigateTo(dbUser?.Character == null ? "/character-creation" : "/");
     }
 }

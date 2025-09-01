@@ -4,15 +4,18 @@ window.firebaseAuth = {
     signIn: function (email, password) {
         const auth = getAuth();
         return signInWithEmailAndPassword(auth, email, password)
-            .then(userCredential => userCredential.user.uid)
+            .then(userCredential => ({
+                uid: userCredential.user.uid,
+                email: userCredential.user.email || ""
+            }))
             .catch(err => {
                 console.error(err);
-                return "";
+                return null;
             });
     },
     getCurrentUser: function () {
         const auth = getAuth();
         const user = auth.currentUser;
-        return user ? user.uid : "";
+        return user ? { uid: user.uid, email: user.email || "" } : null;
     }
 };

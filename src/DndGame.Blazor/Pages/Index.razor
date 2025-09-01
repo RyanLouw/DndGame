@@ -3,9 +3,9 @@
 
 <h1>Welcome to DndGame</h1>
 
-@if (!string.IsNullOrEmpty(userId))
+@if (currentUser is not null)
 {
-    <p>Logged in as @userId</p>
+    <p>Logged in as @currentUser.Uid</p>
 }
 else
 {
@@ -13,10 +13,10 @@ else
 }
 
 @code {
-    private string? userId;
+    private FirebaseUser? currentUser;
 
     protected override async Task OnInitializedAsync()
     {
-        userId = await Auth.GetCurrentUser();
+        currentUser = await Auth.GetCurrentUser();
     }
 }

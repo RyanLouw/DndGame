@@ -17,7 +17,7 @@ namespace DndGame.Blazor
 
         public Task<User?> GetUserAsync(string firebaseId, string email)
         {
-            var url = $"api/dnd/user?firebaseId={firebaseId}&email={email}";
+            var url = $"api/dnd/User?firebaseId={firebaseId}&email={email}";
             return _http.GetFromJsonAsync<User>(url);
         }
     }
