@@ -1,4 +1,4 @@
-﻿using DndGame.Data.Entities; 
+using DndGame.Data.Entities;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -15,22 +15,13 @@ namespace DndGame.Blazor
             _http = http;
         }
 
-        public async Task<(User? user, bool needsCharacterCreation)> GetUserAsync(string firebaseId, string email)
+        public Task<User?> GetUserAsync(string firebaseId, string email)
         {
             var url = $"api/dnd/user?firebaseId={firebaseId}&email={email}";
-
-            var response = await _http.GetFromJsonAsync<UserResponse>(url);
-
-            return (response?.User, response?.NeedsCharacterCreation ?? true);
+            return _http.GetFromJsonAsync<User>(url);
         }
     }
 
-    // match your API response exactly
-    public class UserResponse
-    {
-        public User? User { get; set; }
-        public bool NeedsCharacterCreation { get; set; }
-    }
     public class ApiSettings
     {
         public Dictionary<string, string> Apis { get; set; } = new();
