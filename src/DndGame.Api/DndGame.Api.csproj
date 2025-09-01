@@ -22,10 +22,4 @@
     <ProjectReference Include="..\DndGame.Data\DndGame.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DndGame.Domain">
-      <HintPath>..\DndGame.Domain\obj\Debug\net9.0\ref\DndGame.Domain.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
