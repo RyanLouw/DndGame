@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 
@@ -18,6 +19,8 @@ builder.Services.AddSingleton(apiSettings);
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<ApiServices>();
 builder.Services.AddScoped<FirebaseAuthService>();
+
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 try
 {
