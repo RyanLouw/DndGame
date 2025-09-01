@@ -19,8 +19,13 @@
         userId = await Auth.GetCurrentUser();
         if (!string.IsNullOrEmpty(userId))
         {
-            var userExists = await ApiServices.GetUserAsync(userId, "");
-            Navigation.NavigateTo("/");
+            var (user, needsCreate) = await ApiServices.GetUserAsync(userId, email ?? string.Empty);
+
+            // go to CharacterCreation if no user record OR API says they need creation
+            if (user is null || needsCreate)
+                Navigation.NavigateTo("/CharacterCreation", forceLoad: false);
+            else
+                Navigation.NavigateTo("/", forceLoad: false);
         }
     }
 
@@ -29,8 +34,12 @@
         userId = await Auth.SignInWithEmailPassword(email, password);
         if (!string.IsNullOrEmpty(userId))
         {
-            var userExists = await ApiServices.GetUserAsync(userId, "");
-            Navigation.NavigateTo("/");
+            var (user, needsCreate) = await ApiServices.GetUserAsync(userId, email ?? string.Empty);
+
+            if (user is null || needsCreate)
+                Navigation.NavigateTo("/CharacterCreation", forceLoad: false);
+            else
+                Navigation.NavigateTo("/", forceLoad: false);
         }
     }
 }
