@@ -35,7 +35,9 @@ builder.Services.AddCors(opt =>
 builder.Services.AddControllers();
 
 
+
 builder.Services.AddScoped<UserDataAccess>();
+builder.Services.AddScoped<CharacterDataAccess>();
 
 var app = builder.Build();
 app.UseCors();
