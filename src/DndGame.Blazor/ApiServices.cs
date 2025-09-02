@@ -15,7 +15,7 @@ namespace DndGame.Blazor
         private readonly HttpClient _http;
         private readonly ILogger<ApiServices> _logger;
         private readonly string _baseUrl;
-
+          
         public ApiServices(HttpClient http, ILogger<ApiServices> logger, IOptions<ApiSettings> options)
         {
             _http = http;
